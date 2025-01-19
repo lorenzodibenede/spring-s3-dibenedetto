@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- Libraries principales utilisées, pas obligatoire, mais permet un standard dans la version Spring -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.1</version>
+        <relativePath/>
+    </parent>
+
+    <!-- identification de l'artfact (jar) généré. Dans notre cas ch.hearc.cashcard.0.0.1-SNAPSHOT -->
+    <groupId>ch.hearc</groupId>
+    <artifactId>cashcard</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>cashcard</name>
+    <description>cashcard</description>
+
+    <!-- propriétés pour Maven -->
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <!-- zone de description des dépendnaces utilisées -->
+    <!-- noter que grâce à la balise parente, les dépendances org.springframwork ne doivent pas spécifier de versions -->
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- dépendances starter pour jpa -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- dépendances pour db ram h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+        <!-- Dépendances de tests only, ne fera pas partie du livrable final -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- Configugation du build du projet -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
