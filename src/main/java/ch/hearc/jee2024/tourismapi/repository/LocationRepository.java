@@ -9,7 +9,4 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
-    List<Location> findByValidatedBy(User validatedBy);
-
-    List<Location> findBySubmittedBy(User submittedBy);
 }

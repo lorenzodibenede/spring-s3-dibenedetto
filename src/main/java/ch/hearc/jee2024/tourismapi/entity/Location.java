@@ -1,10 +1,17 @@
 package ch.hearc.jee2024.tourismapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "locations")
 public class Location {
+
+    public interface SummaryView {
+    }
+
+    ;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,19 +40,23 @@ public class Location {
         this.submittedBy = submittedBy;
     }
 
+    @JsonView(SummaryView.class)
     public Long getId() {
         return id;
     }
 
+    @JsonView(SummaryView.class)
     public String getName() {
         return name;
     }
 
+    @JsonView(SummaryView.class)
     public Double getAverageRating() {
         return averageRating;
     }
 
     public void setAverageRating(Double averageRating) {
+
         this.averageRating = averageRating;
     }
 
@@ -63,5 +74,13 @@ public class Location {
 
     public User getSubmittedBy() {
         return submittedBy;
+    }
+
+    public User getValidatedBy() {
+        return validatedBy;
+    }
+
+    public void setValidatedBy(User validatedBy) {
+        this.validatedBy = validatedBy;
     }
 }

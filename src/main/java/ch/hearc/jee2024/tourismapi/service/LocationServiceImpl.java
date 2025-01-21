@@ -1,16 +1,14 @@
 package ch.hearc.jee2024.tourismapi.service;
 
-import ch.hearc.jee2024.tourismapi.DTO.LocationDTO;
 import ch.hearc.jee2024.tourismapi.entity.Location;
 import ch.hearc.jee2024.tourismapi.entity.User;
 import ch.hearc.jee2024.tourismapi.repository.LocationRepository;
 import ch.hearc.jee2024.tourismapi.repository.UserRepository;
+import ch.hearc.jee2024.tourismapi.utils.Role;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -23,10 +21,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     public Location submitLocation(String name, String description, Double latitude, Double longitude, Long userId) {
-        User submittedBy = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found for ID: " + userId));
 
-        Location location = new Location(name, description, latitude, longitude, submittedBy);
+        Location location = new Location(name, description, latitude, longitude, user);
+        if (user.getRole() == Role.ADMIN) {
+            location.setValidatedBy(user);
+        }
+
         return locationRepository.save(location);
     }
 
@@ -34,27 +36,46 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.findById(locationId);
     }
 
-    public List<Location> getLocationsValidatedBy(User admin) {
-        return locationRepository.findByValidatedBy(admin);
+    public List<Location> getAllLocations(Integer page, Integer limit) {
+        return paginateLocations(locationRepository.findAll(), page, limit);
     }
 
-    public List<Location> getLocationsSubmittedBy(User user) {
-        return locationRepository.findBySubmittedBy(user);
+    public List<Location> getValidatedLocations(Integer page, Integer limit) {
+        return paginateLocations(locationRepository.findAll()
+                .stream()
+                .filter(location -> location.getValidatedBy() != null)
+                .toList(), page, limit);
     }
 
-    public List<LocationDTO> getLocations(Integer page, Integer limit) {
-        List<Location> locations = locationRepository.findAll();
-
-        Stream<Location> locationStream = locations.stream();
+    private List<Location> paginateLocations(List<Location> locations, Integer page, Integer limit) {
         if (page != null && limit != null) {
-            locationStream = locationStream.skip((long) (page - 1) * limit).limit(limit);
+            return locations.stream()
+                    .skip((long) (page - 1) * limit)
+                    .limit(limit)
+                    .toList();
+        }
+        return locations;
+    }
+
+    public boolean validateLocation(Long locationId, User admin) {
+        Optional<Location> locationOptional = locationRepository.findById(locationId);
+        if (locationOptional.isEmpty()) {
+            return false;
         }
 
-        return locationStream
-                .map(location -> new LocationDTO(
-                        location.getId(),
-                        location.getName(),
-                        location.getAverageRating()))
-                .toList();
+        Location location = locationOptional.get();
+        location.setValidatedBy(admin);
+        locationRepository.save(location);
+        return true;
+    }
+
+    public boolean rejectLocation(Long locationId) {
+        Optional<Location> locationOptional = locationRepository.findById(locationId);
+        if (locationOptional.isEmpty()) {
+            return false;
+        }
+
+        locationRepository.delete(locationOptional.get());
+        return true;
     }
 }
