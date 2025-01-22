@@ -10,8 +10,6 @@ public class Location {
     public interface SummaryView {
     }
 
-    ;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

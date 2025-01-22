@@ -1,11 +1,16 @@
 package ch.hearc.jee2024.tourismapi.entity;
 
 import ch.hearc.jee2024.tourismapi.utils.RatingId;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "ratings")
 public class Rating {
+
+    public interface WithoutUserView {}
+    public interface WithUserIdView extends WithoutUserView {}
+
     @EmbeddedId
     private RatingId id;
 
@@ -31,6 +36,7 @@ public class Rating {
         setRating(rating);
     }
 
+    @JsonView(WithoutUserView.class)
     public Integer getRating() {
         return rating;
     }
@@ -44,6 +50,11 @@ public class Rating {
 
     public User getUser() {
         return user;
+    }
+
+    @JsonView(WithUserIdView.class)
+    public Long getUserId() {
+        return user.getId();
     }
 
     public void setUser(User user) {

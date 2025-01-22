@@ -32,6 +32,10 @@ public class RatingServiceImpl implements RatingService {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new NoSuchElementException("Location not found"));
+        
+        if (location.getValidatedBy() == null) {
+            throw new IllegalArgumentException("Location is not validated.");
+        }
 
         Rating rating = new Rating(user, location, ratingValue);
         ratingRepository.save(rating);

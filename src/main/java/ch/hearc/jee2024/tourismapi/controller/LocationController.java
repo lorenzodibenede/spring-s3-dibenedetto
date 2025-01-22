@@ -81,6 +81,7 @@ class LocationController {
     }
 
     @PostMapping("/{locationId}/rate")
+    @JsonView(Rating.WithoutUserView.class)
     public ResponseEntity<Rating> rateLocation(
             @PathVariable Long locationId,
             @RequestBody RatingRequestDTO ratingRequest) {
@@ -99,6 +100,7 @@ class LocationController {
     }
 
     @GetMapping("/{locationId}/ratings")
+    @JsonView(Rating.WithUserIdView.class)
     public ResponseEntity<List<Rating>> getRatingsByLocation(
             @PathVariable Long locationId) {
         try {

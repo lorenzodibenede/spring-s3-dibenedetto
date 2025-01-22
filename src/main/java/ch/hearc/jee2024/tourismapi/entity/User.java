@@ -8,8 +8,8 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class User {
 
-    public interface WithoutRoleView {};
-    public interface WithoutPasswordView extends WithoutRoleView {};
+    public interface WithoutRoleView {}
+    public interface WithoutPasswordView extends WithoutRoleView {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
