@@ -10,6 +10,8 @@ public class User {
 
     public interface WithoutRoleView {}
     public interface WithoutPasswordView extends WithoutRoleView {}
+    public interface Summary extends WithoutPasswordView {}
+    public interface AdminSummary extends WithoutRoleView {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +35,10 @@ public class User {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @JsonView(WithoutRoleView.class)
     public String getName() {
         return name;
@@ -45,6 +51,11 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    @JsonView({Summary.class, AdminSummary.class})
+    public String getHref() {
+        return "api/users/" + id;
     }
 }
 

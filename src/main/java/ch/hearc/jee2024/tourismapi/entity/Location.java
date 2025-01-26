@@ -3,6 +3,10 @@ package ch.hearc.jee2024.tourismapi.entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Entity
 @Table(name = "locations")
 public class Location {
@@ -27,6 +31,9 @@ public class Location {
     @JoinColumn(name = "validated_by")
     private User validatedBy;
 
+    @OneToMany(mappedBy = "location", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Rating> ratings = new ArrayList<>();
+
     public Location() {
     }
 
@@ -41,6 +48,10 @@ public class Location {
     @JsonView(SummaryView.class)
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @JsonView(SummaryView.class)
@@ -70,15 +81,28 @@ public class Location {
         return longitude;
     }
 
-    public User getSubmittedBy() {
-        return submittedBy;
+    @JsonView(SummaryView.class)
+    public Long getSubmittedById(){
+        Optional<User> userId = Optional.ofNullable(this.submittedBy);
+        return userId.map(User::getId).orElse(null);
     }
 
-    public User getValidatedBy() {
-        return validatedBy;
+    public void setSubmittedBy(User submittedBy) {
+        this.submittedBy = submittedBy;
+    }
+
+    @JsonView(SummaryView.class)
+    public Long getValidatedById(){
+        Optional<User> userId = Optional.ofNullable(this.validatedBy);
+        return userId.map(User::getId).orElse(null);
     }
 
     public void setValidatedBy(User validatedBy) {
         this.validatedBy = validatedBy;
+    }
+
+    @JsonView(SummaryView.class)
+    public String getHref() {
+        return "api/locations/" + this.id;
     }
 }

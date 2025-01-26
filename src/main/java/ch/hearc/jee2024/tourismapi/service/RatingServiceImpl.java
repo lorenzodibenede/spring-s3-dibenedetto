@@ -33,7 +33,7 @@ public class RatingServiceImpl implements RatingService {
         Location location = locationRepository.findById(locationId)
                 .orElseThrow(() -> new NoSuchElementException("Location not found"));
         
-        if (location.getValidatedBy() == null) {
+        if (location.getValidatedById() == null) {
             throw new IllegalArgumentException("Location is not validated.");
         }
 

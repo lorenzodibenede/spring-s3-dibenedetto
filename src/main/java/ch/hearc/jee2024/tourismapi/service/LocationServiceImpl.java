@@ -43,7 +43,7 @@ public class LocationServiceImpl implements LocationService {
     public List<Location> getValidatedLocations(Integer page, Integer limit) {
         return paginateLocations(locationRepository.findAll()
                 .stream()
-                .filter(location -> location.getValidatedBy() != null)
+                .filter(location -> location.getValidatedById() != null)
                 .toList(), page, limit);
     }
 

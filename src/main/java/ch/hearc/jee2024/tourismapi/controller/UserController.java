@@ -36,14 +36,14 @@ class UserController {
     }
 
     @GetMapping
-    @JsonView(User.WithoutPasswordView.class)
+    @JsonView(User.Summary.class)
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/admins")
-    @JsonView(User.WithoutRoleView.class)
+    @JsonView(User.AdminSummary.class)
     public ResponseEntity<List<User>> getAllAdmins() {
         List<User> admins = userService.getAllAdmins();
         return ResponseEntity.ok(admins);
